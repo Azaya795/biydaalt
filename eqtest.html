@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-image: url(./test2back.jpeg);
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #e8e7d0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #555;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            margin: 0;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 5px 0;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #474747;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #a7a7a7;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f3f8d8;
+            border: 1px solid #eff3ca;
+            border-radius: 5px;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            EQ тодорхойлох тест</h1>
+        <form id="zsdsForm">
+        </form>
+        <button class="btn" onclick="calculateZSDS()">Үр дүнг харах</button>
+        <div id="result" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const questions = [
+            "Надад ямар мэдрэмж төрж байгааг ухамсарлаж чаддаг",
+            "Заримдаа сэтгэл хөдлөлөө хянаж чадахгүй хэт их уурладаг",
+            "Найзууд маань намайг сайн сонсогч гэдэг",
+            "Сэтгэл түгшсэн эсвэл сэтгэлээр унасан үедээ өөрийгөө хэрхэн тайвшруулахаа би мэддэг",
+            "Би бусдыг удирдан зохион байгуулах ажилд оролцох дуртай",
+            "Цөхрөнгөө барж аз жаргалгүй болсон үедээ эргээд хэвийн байдалдаа орох гэж уддаг",
+            "Би өөрийн давуу болон сул талаа сайн мэднэ",
+            "Би бусадтай санал зөрөлдөхөөс аль болох зайлсхийдэг",
+            "Би өөрийгөө илүү сайн мэдэхийн тулд өөрийнхөө талаарх бусдын бодлыг анхааралтай сонсдог",
+            "Би бусдын юу мэдэрч байгааг тэр бүр анзаардаггүй",
+            "Бусадтай тууштай итгэлтэй харилцаа үүсгэхэд хэцүү байдаг",
+            "Бусадтай ярилцах үедээ аль болох идэвхтэй сонсохыг хичээдэг"
+        ];
+        const zsdsForm = document.getElementById("zsdsForm");
+
+questions.forEach((q, index) => {
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question");
+    questionDiv.innerHTML = `
+        <p>${index + 1}. ${q}</p>
+        <div class="options">
+            <label><input type="radio" name="q${index}" value="1" required> Хэзээ ч үгүй</label>
+            <label><input type="radio" name="q${index}" value="2"> Цөөхөн тохиолдолд</label>
+            <label><input type="radio" name="q${index}" value="3"> Заримдаа </label>
+            <label><input type="radio" name="q${index}" value="4"> Ихэнхдээ</label>
+            <label><input type="radio" name="q${index}" value="5"> Үргэлж</label>
+        </div>
+    `;
+    zsdsForm.appendChild(questionDiv);
+});
+
+function calculateZSDS() {
+    const formData = new FormData(zsdsForm);
+    let totalScore = 0;
+        questions.forEach((_, index) => {
+                const value = parseInt(formData.get(`q${index}`));
+                totalScore += value;
+            });
+
+            let level;
+            if (totalScore <= 23) {
+                level = "Таны EQ муу ";
+            } else if (totalScore <= 35) {
+                level = "Таны EQ дунд";
+            } else if (totalScore <= 47) {
+                level = "Таны EQ сайн";
+            } else if (totalScore<=60){
+                level = "Таны EQ маш сайн";
+            }
+
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").innerHTML = `
+                <p>Нийт оноо: ${totalScore}</p>
+                <p>Тестийн үр дүн: ${level}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZSDS Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-image: url(./testback.jpeg);
+            color: #253049d5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #e2d1b5;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #0b2f836a;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            margin: 0;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin: 5px 0;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #474747;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #a7a7a7;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #bed1ff;
+            border: 1px solid #bbceff;
+            border-radius: 5px;
+            color: #001855;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+         Сэтгэл гутралын түвшин тодорхойлох тест </h1>
+        <form id="zsdsForm">
+        </form>
+        <button class="btn" onclick="calculateZSDS()">Үр дүнг харах</button>
+        <div id="result" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        const questions = [
+            "Би ихэнхдээ уйтгар гунигтай, сэтгэлээр унасан байдаг.",
+            "Өөрийгөө хамгийн сайн хэлбэрээр хүлээн зөвшөөрөхөд бэрхшээлтэй байдаг.",
+            "Би ихэнхдээ уйлах хүсэлтэй байдаг, эсвэл бараг уйлдаг.",
+            "Би унтахад хүндрэлтэй байдаг (жишээ нь, унтаж чадахгүй байх, шөнө дунд сэрэх гэх мэт).",
+            "Өнөөдрийн амьдралд баяр баясгалан эсвэл сэтгэл ханамж мэдэрдэггүй.",
+            "Би хоолны дуршилгүй болдог.",
+            "Би найз нөхөд болон гэр бүлийнхэнтэй харилцахаас зайлсхийдэг.",
+            "Би шийдвэр гаргахад хэцүү байдаг.",
+            "Би өөрийгөө буруутай мэт мэдэрдэг.",
+            "Би өөрийгөө шийтгүүлэх ёстой мэт мэдэрдэг.",
+            "Би ихэвчлэн эрч хүчгүй байдаг.",
+            "Би ирээдүйд итгэл найдваргүй болсон мэт мэдэрдэг.",
+            "Би амьдрах сонирхолгүй болсон.",
+            "Би амархан ядардаг.",
+            "Би сэтгэлээр унасан үед бие махбодын өвдөлт мэдэрдэг.",
+            "Би өөрийнхөө эрүүл мэндийн талаар байнга санаа зовдог.",
+            "Би аливаа зүйлсийг эхлүүлэхэд хэцүү байдаг.",
+            "Би ажилдаа сонирхолгүй болсон.",
+            "Би өөрийгөө тусгаарлагдсан мэт мэдэрдэг.",
+            "Би хэтэрхий их дарамтад орсон мэт мэдрэмжтэй байдаг."
+        ];
+        const zsdsForm = document.getElementById("zsdsForm");
+
+questions.forEach((q, index) => {
+    const questionDiv = document.createElement("div");
+    questionDiv.classList.add("question");
+    questionDiv.innerHTML = `
+        <p>${index + 1}. ${q}</p>
+        <div class="options">
+            <label><input type="radio" name="q${index}" value="1" required> Хэзээ ч биш</label>
+            <label><input type="radio" name="q${index}" value="2"> Хааяа</label>
+            <label><input type="radio" name="q${index}" value="3"> Ихэвчлэн</label>
+            <label><input type="radio" name="q${index}" value="4"> Бараг үргэлж</label>
+        </div>
+    `;
+    zsdsForm.appendChild(questionDiv);
+});
+
+function calculateZSDS() {
+    const formData = new FormData(zsdsForm);
+    let totalScore = 0;
+        questions.forEach((_, index) => {
+                const value = parseInt(formData.get(`q${index}`));
+                totalScore += value;
+            });
+
+            let level;
+            if(totalScore!=0) {
+            if (totalScore <= 49) {
+                level = "Сэтгэл гутралгүй эсвэл бага түвшин.";
+            } else if (totalScore <= 59) {
+                level = "Хөнгөн сэтгэл гутрал.";
+            } else if (totalScore <= 69) {
+                level = "Дунд зэргийн сэтгэл гутрал.";
+            } else if (totalScore >= 69){
+                level = "Хүнд сэтгэл гутрал.";
+            }} else level="Та үр дүнг шалгахын өмнө эхлээд тестээ бөглөнө үү"
+
+            document.getElementById("result").style.display = "block";
+            document.getElementById("result").innerHTML = `
+                <p><strong>Үр дүн:</strong></p>
+                <p>Нийт оноо: ${totalScore}</p>
+                <p>Сэтгэл гутралын түвшин: ${level}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

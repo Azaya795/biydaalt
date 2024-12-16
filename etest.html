@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>zurgen test</title>
+        <style>
+            h1 {
+                font-family: Arial, sans-serif;
+                height: 100px;
+                text-align: center;
+                padding-top: 30px;
+                background-color: rgba(233, 238, 176, 0.439);
+                color: #dd84d4;
+            }
+            body {
+                flex-wrap: wrap;
+                background-color: rgb(253, 190, 240);
+            }
+            .gallery {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+                max-width: 600px;
+                margin: 20px auto;
+            }
+            .gallery img {
+                width: 100%;
+                cursor: pointer;
+                border: 2px solid transparent;
+                transition: border 0.3s;
+            }
+            .gallery img:hover {
+                border: 2px solid #ff00dd;
+            }
+            .popup {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: rgb(253, 209, 243);
+                padding: 20px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                border-radius: 10px;
+                text-align: center;
+                z-index: 1000;
+                display: none;
+            }
+            .popup button {
+                margin-top: 10px;
+                padding: 5px 10px;
+                background-color: #e46ae7;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .popup button:hover {
+                background-color: #b30089;
+            }
+            .overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Та өөрт таалагдсан нэг дүрсээ сонгоно уу</h1>
+        <div class="gallery">
+            <div>
+                <img src="./1.png" onclick="showMessage(1)" alt="Image 1">
+                <img src="./2.png" onclick="showMessage(2)" alt="Image 2">
+                <img src="./3.png" onclick="showMessage(3)" alt="Image 3">
+            </div>
+            <div>
+                <img src="./4.png" onclick="showMessage(4)" alt="Image 4">
+                <img src="./5.png" onclick="showMessage(5)" alt="Image 5">
+                <img src="./6.png" onclick="showMessage(6)" alt="Image 6">
+            </div>
+            <div>
+                <img src="./7.png" onclick="showMessage(7)" alt="Image 7">
+                <img src="./8.png" onclick="showMessage(8)" alt="Image 8">
+                <img src="./9.png" onclick="showMessage(9)" alt="Image 9">
+            </div>
+        </div>
+        <div class="overlay" id="overlay" onclick="closePopup()"></div>
+        <div class="popup" id="popup">
+            <p id="popup-message"></p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+        <script>
+            function showMessage(imageNumber) {
+                const messages = {
+                    1: "Таны хувьд амьдрал бол эрх чөлөө, адал явдал юм. Аливаад санаа бага зовохыг хичээдэг, алиа хөгжилтэй зан тань бусдыг өөртөө татдаг байна. Шинэ зүйлийг мэдрэх, дасан зохицох нь танд хэцүү төвөгтэй байдаггүй. Харин танд ямар нэгэн зүйлээс хамааралтай байх нь тухгүй байдлыг бий болгодог.",
+                    2: "Та бол бие даасан , ямар нэгэн зүйлд баригдахгүй байхыг эрхэмлэдэг хүн юм. Та өөрийнхөөрөө шийдвэр гаргаж, бусдыг аялдан дагахгүй, итгэл үнэмшилдээ үнэнч байж чаддаг. Мөн энэ зургийг сонгосон хүмүүс урлагийн мэдрэмж нэлээд өндөр байдаг",
+                    3: "Та өөртөө итгэлтэй хүн бөгөөд бусдын итгэлийг дааж чаддаг хүн. Бусдын олж харж чадаагүй өнцөгөөс сэтгэж, бодит үнэлэмжийг өгч чаддаг давуу талтай. Дэгжин, тансаг  атлаа чөлөөт байдлыг эрхэмлэдэг. Амьдралдаа мөрдөх соёл, хандлага таны хувьд маш чухал.",
+                    4: "Та амьдралын мөчүүдийг нандин байлгахыг эрхэмлэдэг хүн. Бусадтай танилцаж, харилцаа үүсгэхэд танд ямар нэгэн саад тулгардаггүй. Гэсэн хэдий ч та ганцаараа байхыг эрхэмлэж, аливааг эргэцүүлэх дуртай. Та өөрийн гэсэн орон зайг бий болгон түүндээ өөрийнхөөрөө байж чаддаг.",
+                    5: "Та өөртөө итгэлтэй, аливааг хийсвэр зүйлд найдахаас илүүтэй өөрийн тань үйл хөдлөл,шийдвэрээс шалтгаална гэж үздэг учраас удирдлагыг гартаа байлгахыг эрхэмлэдэг. Мөн та итгэл даах, хариуцлагатай хүн учраас асуудлыг шийдэх гаргалгааг олох тийм ч хэцүү биш байдаг.",
+                    6: "Та тайван, эрч хүчээр дүүрэн хүн юм. Хүмүүс тантай ярилцахдаа таатай байдаг. Ойр дотны, чухал хүмүүстэйгээ байхдаа хамгаалагдсан аюулгүй мэдрэмж авдаг. Биеэ авч явах хэв маяг, өдөр тутмын хэмнэлээ энгийн байлгахыг эрхэмлэдэг",
+                    7: "Та өөртөө дүгнэлт хийж тунгаан, эргэцүүллэх дуртай хүн юм. Хувийн орон зай болон хүрээлэн буй хүмүүсийнхээ талаар та бодолд их автдаг ба амархан хувирч өөрчлөгддөг хүмүүст дургүй. Найз нөхдийнхөө харилцаанд сэтгэл хангалуун байж чаддаг ба үүнээс та тайван байдлыг мэдэрч чаддаг. ",
+                    8: "Та бол мөрөөдөл, зорилго бол амьдралын салшгүй нэг хэсэг гэж үздэг чөлөөт сэтгэлгээтэй хүн юм. Бусдын сэтгэл хөдлөл, мэдрэмжийг сайн ойлгож чаддаг. Харилцаа холбоо үүсгэх нь танд тийм ч төвөгтэй байдаггүй бөгөөд тантай байхдаа хүмүүс тайвшралыг мэдэрдэг. ",
+                    9: "Та нэгэн хэвийн, уйтгартай байдалд дургүй бөгөөд экстраверт төрлийн хүн. Шинэ зүйлийг турших, эрсдэлтэй алхам хийх нь танд тийм ч хэцүү байдаггүй. Харин ч та үүнээс амьдралын таашаал, эрч хүчээ олж авдаг идэвхтэй хүн юм."
+                };
+                const popup = document.getElementById("popup");
+                const overlay = document.getElementById("overlay");
+                const messageElement = document.getElementById("popup-message");
+
+                messageElement.textContent = messages[imageNumber] || "Unknown image!";
+                popup.style.display = "block";
+                overlay.style.display = "block";
+            }
+
+            function closePopup() {
+                const popup = document.getElementById("popup");
+                const overlay = document.getElementById("overlay");
+
+                popup.style.display = "none";
+                overlay.style.display = "none";
+            }
+        </script>
+    </body>
+</html>
